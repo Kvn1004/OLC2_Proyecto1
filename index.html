@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MatrioshTS</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/consola.css">
+    <script src="lib/codemirror.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/funciones.js"></script>
+    <script src="js/gramatica.js"></script>
+</head>
+
+<header>
+    Editor
+</header>
+
+<body>
+    <table>
+        <tr>
+            <button id="btnTraducir" onclick="traducir()">Traducir</button>
+            <button id="btnEjecutar" onclick="ejecutar()">Ejecutar</button>
+            <button id="btnErrores" onclick="generarReporteErrores()">Reporte de Errores</button>
+            <button id="btnTS" onclick="generarTablaSimbolos()">Reporte Tabla de Símbolos</button>
+            <button id="btnATS" onclick="generarATS()">Reporte ATS</button>
+        </tr>
+        <tr>
+            <td id="editor">
+                <textarea id="txtEditor" cols="230" rows="20"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td id="consola">
+                Consola
+                <textarea id="txtConsola" cols="230" rows="20" readonly></textarea>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
