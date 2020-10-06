@@ -1,18 +1,4 @@
-const TIPO_DATO = {
-    NUMERO: 'NUMERO',
-    STRING: 'STRING'
-
-}
-
-function crearSimbolo(id, tipo, valor) {
-    return {
-        id: id,
-        tipo: tipo,
-        valor: valor
-    }
-}
-
-class TS {
+export const TS = class {
     constructor(simbolos) {
         this._simbolos = simbolos;
     }
@@ -58,7 +44,22 @@ class TS {
     get simbolos() {
         return this._simbolos;
     }
+
 }
 
-module.exports.TIPO_DATO = TIPO_DATO;
-module.exports.TS = TS;
+const TIPO_DATO = {
+    NUMERO: 'NUMERO',
+    STRING: 'STRING'
+
+}
+
+function crearSimbolo(id, tipo, valor) {
+    return {
+        id: id,
+        tipo: tipo,
+        valor: valor
+    }
+}
+
+/*module.exports.TIPO_DATO = TIPO_DATO;
+module.exports.TS = TS;*/

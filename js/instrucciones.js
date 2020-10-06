@@ -10,9 +10,10 @@ const TIPO_OPERACION = {
     MULTIPLICACION: 'OP_MULTIPLICACION',
     DIVISION: 'OP_DIVISION',
     NEGATIVO: 'OP_NEGATIVO',
+    MODULO: 'OP_MODULO',
+    POTENCIA: 'OP_POTENCIA',
     MAYOR_QUE: 'OP_MAYOR_QUE',
     MENOR_QUE: 'OP_MENOR_QUE',
-
     MAYOR_IGUAL: 'OP_MAYOR_IGUAL',
     MENOR_IGUAL: 'OP_MENOR_IGUAL',
     DOBLE_IGUAL: 'OP_DOBLE_IGUAL',
@@ -22,7 +23,12 @@ const TIPO_OPERACION = {
     OR: 'OP_OR',
     NOT: 'OP_NOT',
 
-    CONCATENACION: 'OP_CONCATENACION'
+    CONCATENACION: 'OP_CONCATENACION',
+
+    TRUE: 'OP_TRUE',
+    FALSE: 'OP_FALSE',
+    NULL: 'OP_NULL',
+    UNDEFINED: 'OP_UNDEFINED'
 };
 
 const TIPO_INSTRUCCION = {
@@ -52,117 +58,125 @@ function nuevaOperacion(operandoIzq, operandoDer, tipo) {
 }
 
 const instruccionesAPI = {
-    nuevoOperacionBinaria: function(operandoIzq, operandoDer, tipo) {
-        return nuevaOperacion(operandoIzq, operandoDer, tipo);
-    },
+        nuevoOperacionBinaria: function(operandoIzq, operandoDer, tipo) {
+            return nuevaOperacion(operandoIzq, operandoDer, tipo);
+        },
 
-    nuevoOperacionUnaria: function(operando, tipo) {
-        return nuevaOperacion(operando, undefined, tipo);
-    },
+        nuevoOperacionUnaria: function(operando, tipo) {
+            return nuevaOperacion(operando, undefined, tipo);
+        },
 
-    nuevoValor: function(valor, tipo) {
-        return {
-            tipo: tipo,
-            valor: valor
-        }
-    },
+        nuevoValor: function(valor, tipo) {
+            return {
+                tipo: tipo,
+                valor: valor
+            }
+        },
 
-    nuevoLog: function(expresionCadena) {
-        return {
-            tipo: TIPO_INSTRUCCION.LOG,
-            expresionCadena: expresionCadena
-        };
-    },
+        nuevaLlamadaFuncion: function(id, parametros) {
+            if (id == "console.log") {
+                console.log("looog");
+            } else {
+                return {
 
-    nuevoWhile: function(expresionLogica, instrucciones) {
-        return {
-            tipo: TIPO_INSTRUCCION.WHILE,
-            expresionLogica: expresionLogica,
-            instrucciones: instrucciones
-        };
-    },
+                }
+            }
+        },
 
-    nuevoFor: function(variable, valorVariable, expresionLogica, aumento, instrucciones) {
-        return {
-            tipo: TIPO_INSTRUCCION.FOR,
-            expresionLogica: expresionLogica,
-            instrucciones: instrucciones,
-            aumento: aumento,
-            variable: variable,
-            valorVariable: valorVariable
-        }
-    },
+        nuevoLog: function(expresionCadena) {
+            return {
+                tipo: TIPO_INSTRUCCION.LOG,
+                expresionCadena: expresionCadena
+            };
+        },
 
-    nuevoDeclaracion: function(identificador, tipo) {
-        return {
-            tipo: TIPO_INSTRUCCION.DECLARACION,
-            identificador: identificador,
-            tipo_dato: tipo
-        }
-    },
+        nuevoWhile: function(expresionLogica, instrucciones) {
+            return {
+                tipo: TIPO_INSTRUCCION.WHILE,
+                expresionLogica: expresionLogica,
+                instrucciones: instrucciones
+            };
+        },
 
-    nuevoAsignacion: function(identificador, expresionNumerica) {
-        return {
-            tipo: TIPO_INSTRUCCION.ASIGNACION,
-            identificador: identificador,
-            expresionNumerica: expresionNumerica
-        }
-    },
+        nuevoFor: function(variable, valorVariable, expresionLogica, aumento, instrucciones) {
+            return {
+                tipo: TIPO_INSTRUCCION.FOR,
+                expresionLogica: expresionLogica,
+                instrucciones: instrucciones,
+                aumento: aumento,
+                variable: variable,
+                valorVariable: valorVariable
+            }
+        },
 
-    nuevoIf: function(expresionLogica, instrucciones) {
-        return {
-            tipo: TIPO_INSTRUCCION.IF,
-            expresionLogica: expresionLogica,
-            instrucciones: instrucciones
-        }
-    },
+        nuevoDeclaracion: function(identificador, tipo) {
+            return {
+                tipo: TIPO_INSTRUCCION.DECLARACION,
+                identificador: identificador,
+                tipo_dato: tipo
+            }
+        },
 
-    nuevoIfElse: function(expresionLogica, instruccionesIfVerdadero, instruccionesIfFalso) {
-        return {
-            tipo: TIPO_INSTRUCCION.IF_ELSE,
-            expresionLogica: expresionLogica,
-            instruccionesIfVerdadero: instruccionesIfVerdadero,
-            instruccionesIfFalso: instruccionesIfFalso
-        }
-    },
+        nuevoAsignacion: function(identificador, expresionNumerica) {
+            return {
+                tipo: TIPO_INSTRUCCION.ASIGNACION,
+                identificador: identificador,
+                expresionNumerica: expresionNumerica
+            }
+        },
 
-    nuevoSwitch: function(expresionNumerica, casos) {
-        return {
-            tipo: TIPO_INSTRUCCION.SWITCH,
-            expresionNumerica: expresionNumerica,
-            casos: casos
-        }
-    },
+        nuevoIf: function(expresionLogica, instrucciones) {
+            return {
+                tipo: TIPO_INSTRUCCION.IF,
+                expresionLogica: expresionLogica,
+                instrucciones: instrucciones
+            }
+        },
 
-    nuevoListaCasos: function(caso) {
-        var casos = [];
-        casos.push(caso);
-        return casos;
-    },
+        nuevoIfElse: function(expresionLogica, instruccionesIfVerdadero, instruccionesIfFalso) {
+            return {
+                tipo: TIPO_INSTRUCCION.IF_ELSE,
+                expresionLogica: expresionLogica,
+                instruccionesIfVerdadero: instruccionesIfVerdadero,
+                instruccionesIfFalso: instruccionesIfFalso
+            }
+        },
 
-    nuevoCaso: function(expresionNumerica, instrucciones) {
-        return {
-            tipo: TIPO_OPCION_SWITCH.CASO,
-            expresionNumerica: expresionNumerica,
-            instrucciones: instrucciones
-        }
-    },
+        nuevoSwitch: function(expresionNumerica, casos) {
+            return {
+                tipo: TIPO_INSTRUCCION.SWITCH,
+                expresionNumerica: expresionNumerica,
+                casos: casos
+            }
+        },
 
-    nuevoCasoDef: function(instrucciones) {
-        return {
-            tipo: TIPO_OPCION_SWITCH.DEFECTO,
-            instrucciones: instrucciones
-        }
-    },
+        nuevoListaCasos: function(caso) {
+            var casos = [];
+            casos.push(caso);
+            return casos;
+        },
 
-    nuevoOperador: function(operador) {
-        return operador
-    },
+        nuevoCaso: function(expresionNumerica, instrucciones) {
+            return {
+                tipo: TIPO_OPCION_SWITCH.CASO,
+                expresionNumerica: expresionNumerica,
+                instrucciones: instrucciones
+            }
+        },
 
-}
+        nuevoCasoDef: function(instrucciones) {
+            return {
+                tipo: TIPO_OPCION_SWITCH.DEFECTO,
+                instrucciones: instrucciones
+            }
+        },
 
-module.exports.TIPO_OPERACION = TIPO_OPERACION;
-module.exports.TIPO_INSTRUCCION = TIPO_INSTRUCCION;
-module.exports.TIPO_VALOR = TIPO_VALOR;
-module.exports.instruccionesAPI = instruccionesAPI;
-module.exports.TIPO_OPCION_SWITCH = TIPO_OPCION_SWITCH;
+        nuevoOperador: function(operador) {
+            return operador
+        },
+    }
+    /*module.exports.TIPO_OPERACION = TIPO_OPERACION;
+    module.exports.TIPO_INSTRUCCION = TIPO_INSTRUCCION;
+    module.exports.TIPO_VALOR = TIPO_VALOR;
+    module.exports.instruccionesAPI = instruccionesAPI;
+    module.exports.TIPO_OPCION_SWITCH = TIPO_OPCION_SWITCH;*/
