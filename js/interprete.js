@@ -16,7 +16,7 @@ const TS = require('./tabla_simbolos').TS;*/
 
 //var parser = require(['./gramatica']);
 
-import { TS } from './tabla_simbolos';
+import { TS } from './tabla_simbolos.js';
 
 function ejecutar() {
 
