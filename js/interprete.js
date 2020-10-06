@@ -1,3 +1,6 @@
+import { TS } from './tabla_simbolos.js';
+const tsGlobal = new TS([]);
+
 /*
  * Constantes 
  */
@@ -16,7 +19,7 @@ const TS = require('./tabla_simbolos').TS;*/
 
 //var parser = require(['./gramatica']);
 
-import { TS } from './tabla_simbolos';
+
 
 function ejecutar() {
 
@@ -35,7 +38,6 @@ function ejecutar() {
     }
 }
 
-const tsGlobal = new TS([]);
 
 /*procesarBloque(ast, tsGlobal);
 requirejs(["./instrucciones"], function(instrucciones) {

@@ -1,3 +1,14 @@
+%{
+	/*const TIPO_OPERACION	= require('./instrucciones').TIPO_OPERACION;
+	const TIPO_VALOR 		= require('./instrucciones').TIPO_VALOR;
+	const TIPO_DATO			= require('./tabla_simbolos').TIPO_DATO;
+	const instruccionesAPI	= require('./instrucciones').instruccionesAPI;*/
+  import { TIPO_OPERACION, TIPO_INSTRUCCION, TIPO_VALOR, instruccionesAPI, TIPO_OPCION_SWITCH }
+  from 'instrucciones';
+  import { TIPO_DATO, TS } from 'tabla_simbolos';
+  import { parser } from 'gramatica';
+%}
+
 %lex
 
 %options case-insensitive
@@ -60,16 +71,6 @@
 
 /lex
 
-%{
-	/*const TIPO_OPERACION	= require('./instrucciones').TIPO_OPERACION;
-	const TIPO_VALOR 		= require('./instrucciones').TIPO_VALOR;
-	const TIPO_DATO			= require('./tabla_simbolos').TIPO_DATO;
-	const instruccionesAPI	= require('./instrucciones').instruccionesAPI;*/
-  import { TIPO_OPERACION, TIPO_INSTRUCCION, TIPO_VALOR, instruccionesAPI, TIPO_OPCION_SWITCH }
-  from 'instrucciones';
-  import { TIPO_DATO, TS } from 'tabla_simbolos';
-  import { parser } from 'gramatica';
-%}
 
 %right 'IGUAL'
 %right 'TERNARIO' 'DOSPUNTOS'
