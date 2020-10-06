@@ -1,4 +1,4 @@
-export const TS = class {
+const TS = class {
     constructor(simbolos) {
         this._simbolos = simbolos;
     }

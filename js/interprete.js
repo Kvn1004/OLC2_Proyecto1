@@ -1,6 +1,5 @@
-import { TS } from './tabla_simbolos.js';
-const tsGlobal = new TS([]);
-
+//const tsGlobal = new TS([]);
+//import { parser } from './gramatica.js';
 /*
  * Constantes 
  */
@@ -21,16 +20,18 @@ const TS = require('./tabla_simbolos').TS;*/
 
 
 
-function ejecutar() {
 
+ function ejecutar() {
     let ast;
     try {
         const entrada = document.getElementById("txtEditor").value;
         // invocamos a nuestro parser con el contendio del archivo de entradas
-        ast = parser.parse(entrada.toString());
+        ast = gramatica.parse(entrada.toString());
 
         // imrimimos en un archivo el contendio del AST en formato JSON
         //fs.writeFileSync('./ast.json', JSON.stringify(ast, null, 2));
+        const tsGlobal = new TS([]);
+        procesarBloque(ast, tsGlobal);
         setConsola(ast);
     } catch (e) {
         console.error(e);
@@ -40,7 +41,7 @@ function ejecutar() {
 
 
 /*procesarBloque(ast, tsGlobal);
-requirejs(["./instrucciones"], function(instrucciones) {
+requirejs(["./i nstrucciones"], function(instrucciones) {
 
 });*/
 

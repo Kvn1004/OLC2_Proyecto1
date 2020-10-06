@@ -77,10 +77,10 @@
   }
 */
 
-import { TIPO_OPERACION, TIPO_INSTRUCCION, TIPO_VALOR, instruccionesAPI, TIPO_OPCION_SWITCH }
+/*import { TIPO_OPERACION, TIPO_INSTRUCCION, TIPO_VALOR, instruccionesAPI, TIPO_OPCION_SWITCH }
     from './instrucciones';
 import { TIPO_DATO, TS } from './tabla_simbolos';
-import { parser } from './gramatica';
+import { parser } from './gramatica';*/
 
 var gramatica = (function(){
 var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,7],$V1=[1,9],$V2=[1,10],$V3=[1,11],$V4=[1,12],$V5=[2,5,10,11,15,24,25],$V6=[1,34],$V7=[1,26],$V8=[1,24],$V9=[1,25],$Va=[1,27],$Vb=[1,28],$Vc=[1,29],$Vd=[1,30],$Ve=[1,31],$Vf=[1,32],$Vg=[1,33],$Vh=[13,17],$Vi=[1,45],$Vj=[1,46],$Vk=[1,47],$Vl=[1,48],$Vm=[1,49],$Vn=[1,50],$Vo=[1,51],$Vp=[1,52],$Vq=[1,53],$Vr=[1,54],$Vs=[1,55],$Vt=[1,56],$Vu=[1,57],$Vv=[1,58],$Vw=[1,59],$Vx=[13,17,21,22,30,31,32,34,35,36,37,38,39,40,41,42,43,44,45],$Vy=[13,17,21,22,30,31,32,34,35],$Vz=[13,17,21,22,30,31,32,34,35,36,37,38,39,40,44,45],$VA=[13,17,21,22,30,31,32,34,35,36,37,38,39,40,42,43,44,45];
