@@ -1,14 +1,3 @@
-%{
-	/*const TIPO_OPERACION	= require('./instrucciones').TIPO_OPERACION;
-	const TIPO_VALOR 		= require('./instrucciones').TIPO_VALOR;
-	const TIPO_DATO			= require('./tabla_simbolos').TIPO_DATO;
-	const instruccionesAPI	= require('./instrucciones').instruccionesAPI;*/
-  import { TIPO_OPERACION, TIPO_INSTRUCCION, TIPO_VALOR, instruccionesAPI, TIPO_OPCION_SWITCH }
-  from 'instrucciones';
-  import { TIPO_DATO, TS } from 'tabla_simbolos';
-  import { parser } from 'gramatica';
-%}
-
 %lex
 
 %options case-insensitive
@@ -31,14 +20,14 @@
 "null"              return 'RNULL';
 "undefined"         return 'RUNDEFINED';
 "function"          return 'RFUNCTION';
+"console.log"       return 'RLOG';
 
 "+"                 return 'MAS';
 "-"                 return 'MENOS';
+"**"                return 'POT';
 "*"                 return 'MUL';
 "/"                 return 'DIV';
-"**"                return 'POT';
 "%"                 return 'MOD';
-"="                 return 'IGUAL';
 "("                 return 'LPAR';
 ")"                 return 'RPAR';
 "["                 return 'LCOR';
@@ -55,6 +44,7 @@
 ">="                return 'MAYORIGUAL';
 "=="                return 'DIGUAL';
 "!="                return 'NOIGUAL';
+"="                 return 'IGUAL';
 "?"                 return 'TERNARIO';
 
 (\"[^\"]*\")|(\'[^\']*\')|(\`[^\`]*\`)        { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
@@ -70,7 +60,6 @@
 .                       { console.error('Error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
 
 /lex
-
 
 %right 'IGUAL'
 %right 'TERNARIO' 'DOSPUNTOS'
@@ -98,7 +87,8 @@ sentencias :
     ;
 
 sentencia :
-      declaracion {$$ = $1;}
+      asignacion {$$ = $1;}
+    | declaracion {$$ = $1; }
     | funcion {$$ = $1;}
     | llamada_funcion {$$ = $1; }
     | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
@@ -109,8 +99,9 @@ funcion :
     ;
       
 llamada_funcion :
-      ID LPAR args RPAR
-    | ID LPAR RPAR
+      ID LPAR args RPAR PUNTOCOMA {$$ = "funcion"; }
+    | ID LPAR RPAR PUNTOCOMA {$$ = "funcion"; }
+    | RLOG LPAR expresion RPAR PUNTOCOMA { $$ = instruccionesAPI.nuevoLog($3); }
     ;
 
 args :
@@ -118,9 +109,14 @@ args :
     | expresion
     ;
 
-declaracion : 
-      tipo_var ID IGUAL expresion PUNTOCOMA { $$ = "sucess";}
-    | tipo_var ID DOSPUNTOS tipo_dato IGUAL expresion PUNTOCOMA { $$ = "sucess2";}
+declaracion :
+      tipo_var ID PUNTOCOMA { $$ = instruccionesAPI.noevoDeclaracion($2, "undefined");}
+    | tipo_var ID DOSPUNTOS tipo_dato PUNTOCOMA  { $$ = instruccionesAPI.noevoDeclaracion($2, $4);}
+    ;
+
+asignacion : 
+      tipo_var ID IGUAL expresion PUNTOCOMA { $$ = instruccionesAPI.nuevoAsignacion($2, "undefined", $4);}
+    | tipo_var ID DOSPUNTOS tipo_dato IGUAL expresion PUNTOCOMA { $$ = instruccionesAPI.nuevoAsignacion($2, $4, $6);}
     ;
 
 tipo_var : 
@@ -129,11 +125,11 @@ tipo_var :
     ;
 
 tipo_dato :
-      RNUMBER
-    | RSTRING
-    | RBOOLEAN
-    | RVOID
-    | ID
+      RNUMBER { $$ = "NUMERO"; }
+    | RSTRING { $$ = "STRING"; }
+    | RBOOLEAN { $$ = "BOOLEAN"; }
+    | RVOID { $$ = "VOID"; }
+    | ID { $$ = "TYPE"; }
     ;
 
 expresion :
@@ -158,8 +154,8 @@ expresion :
     | DECIMAL                                           { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.NUMERO); }
     | ENTERO                                            { $$ = instruccionesAPI.nuevoValor(Number($1), TIPO_VALOR.NUMERO); }
     | CADENA                                            { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA); }
-    | RTRUE                                             { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.TRUE); }
-    | RFALSE                                            { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.FALSE); }
+    | RTRUE                                             { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.BOOLEAN); }
+    | RFALSE                                            { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.BOOLEAN); }
     | RNULL                                             { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.NULL); }
     | RUNDEFINED                                        { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.UNDEFINED); }
     | ID                                                { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR); }

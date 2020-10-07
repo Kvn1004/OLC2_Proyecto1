@@ -2,6 +2,9 @@ const TIPO_VALOR = {
     NUMERO: 'VAL_NUMERO',
     IDENTIFICADOR: 'VAL_IDENTIFICADOR',
     CADENA: 'VAL_CADENA',
+    BOOLEAN: 'VAL_BOOLEAN',
+    VOID: 'VAL_VOID',
+    TYPE: 'VAL_TYPE'
 };
 
 const TIPO_OPERACION = {
@@ -74,12 +77,8 @@ const instruccionesAPI = {
         },
 
         nuevaLlamadaFuncion: function(id, parametros) {
-            if (id == "console.log") {
-                console.log("looog");
-            } else {
-                return {
-
-                }
+            return {
+                parametros
             }
         },
 
@@ -117,10 +116,11 @@ const instruccionesAPI = {
             }
         },
 
-        nuevoAsignacion: function(identificador, expresionNumerica) {
+        nuevoAsignacion: function(identificador, tipo, expresionNumerica) {
             return {
                 tipo: TIPO_INSTRUCCION.ASIGNACION,
                 identificador: identificador,
+                tipo_dato: tipo,
                 expresionNumerica: expresionNumerica
             }
         },

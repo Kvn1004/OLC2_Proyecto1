@@ -1,29 +1,10 @@
-//const tsGlobal = new TS([]);
-//import { parser } from './gramatica.js';
-/*
- * Constantes 
- */
-/*const TIPO_INSTRUCCION = require('./instrucciones').TIPO_INSTRUCCION;
-const TIPO_OPERACION = require('./instrucciones').TIPO_OPERACION;
-const TIPO_VALOR = require('./instrucciones').TIPO_VALOR;
-const instruccionesAPI = require('./instrucciones').instruccionesAPI;
-const TIPO_OPCION_SWITCH = require('./instrucciones').TIPO_OPCION_SWITCH;*/
+let contenido = "";
 
-/*
- *Tabla de simbolos
- */
-/*const TIPO_DATO = require('./tabla_simbolos').TIPO_DATO;
-const TS = require('./tabla_simbolos').TS;*/
-
-
-//var parser = require(['./gramatica']);
-
-
-
-
- function ejecutar() {
+function ejecutar() {
     let ast;
     try {
+        document.getElementById("txtConsola").value = "";
+        contenido = "";
         const entrada = document.getElementById("txtEditor").value;
         // invocamos a nuestro parser con el contendio del archivo de entradas
         ast = gramatica.parse(entrada.toString());
@@ -32,18 +13,12 @@ const TS = require('./tabla_simbolos').TS;*/
         //fs.writeFileSync('./ast.json', JSON.stringify(ast, null, 2));
         const tsGlobal = new TS([]);
         procesarBloque(ast, tsGlobal);
-        setConsola(ast);
+        //setConsola(ast);
     } catch (e) {
         console.error(e);
         return;
     }
 }
-
-
-/*procesarBloque(ast, tsGlobal);
-requirejs(["./i nstrucciones"], function(instrucciones) {
-
-});*/
 
 function procesarBloque(instrucciones, tablaDeSimbolos) {
     instrucciones.forEach(instruccion => {
@@ -63,10 +38,13 @@ function procesarBloque(instrucciones, tablaDeSimbolos) {
     });
 }
 
+
+
 function procesarImprimir(instruccion, tablaDeSimbolos) {
     const cadena = procesarExpresionCadena(instruccion.expresionCadena, tablaDeSimbolos).valor;
-    console.log('> ' + cadena);
-    document.getElementById("txtConsola").value = cadena;
+    contenido += cadena + "\n";
+    console.log('> ' + contenido);
+    document.getElementById("txtConsola").value = contenido;
 }
 
 function procesarExpresionNumerica(expresion, tablaDeSimbolos) {
@@ -79,23 +57,32 @@ function procesarExpresionNumerica(expresion, tablaDeSimbolos) {
         // Retornamos el valor negado.
         const res = valor * -1;
         return { valor: res, tipo: TIPO_DATO.NUMERO };
+    } else if (expresion.tipo === TIPO_VALOR.IDENTIFICADOR) {
+        // Es un identificador.
+        // Obtenemos el valor de la tabla de simbolos
+        const sym = tablaDeSimbolos.obtener(expresion.valor);
+        return { valor: sym.valor, tipo: sym.tipo };
     } else if (expresion.tipo === TIPO_OPERACION.SUMA ||
         expresion.tipo === TIPO_OPERACION.RESTA ||
         expresion.tipo === TIPO_OPERACION.MULTIPLICACION ||
-        expresion.tipo === TIPO_OPERACION.DIVISION) {
+        expresion.tipo === TIPO_OPERACION.DIVISION ||
+        expresion.tipo === TIPO_OPERACION.POTENCIA ||
+        expresion.tipo === TIPO_OPERACION.MODULO) {
         // Es una operación aritmética.
         // En este caso necesitamos procesar los operandos antes de realizar la operación.
         // Para esto incovacmos (recursivamente) esta función para resolver los valores de los operandos.
         let valorIzq = procesarExpresionNumerica(expresion.operandoIzq, tablaDeSimbolos); // resolvemos el operando izquierdo.
         let valorDer = procesarExpresionNumerica(expresion.operandoDer, tablaDeSimbolos); // resolvemos el operando derecho.
+
         if (valorIzq.tipo !== TIPO_DATO.NUMERO || valorDer.tipo !== TIPO_DATO.NUMERO) {
             throw 'ERROR: se esperaban expresiones numericas para ejecutar la: ' + expresion.tipo;
         } else {
             valorIzq = valorIzq.valor;
             valorDer = valorDer.valor;
         }
+
         if (expresion.tipo === TIPO_OPERACION.SUMA) {
-            const res = valorIzq + valorDer;
+            const res = valorIzq.valor + valorDer.valor;
             return { valor: res, tipo: TIPO_DATO.NUMERO };
         }
         if (expresion.tipo === TIPO_OPERACION.RESTA) {
@@ -113,18 +100,24 @@ function procesarExpresionNumerica(expresion, tablaDeSimbolos) {
                 const res = valorIzq / valorDer;
                 return { valor: res, tipo: TIPO_DATO.NUMERO };
             }
+        }
+        if (expresion.tipo === TIPO_OPERACION.POTENCIA) {
+            const res = valorIzq ** valorDer;
+            return { valor: res, tipo: TIPO_DATO.NUMERO };
+        }
+        if (expresion.tipo === TIPO_OPERACION.MODULO) {
+            const res = valorIzq % valorDer;
+            return { valor: res, tipo: TIPO_DATO.NUMERO };
         };
 
     } else if (expresion.tipo === TIPO_VALOR.NUMERO) {
         // Es un valor numérico.
         // En este caso únicamente retornamos el valor obtenido por el parser directamente.
         return { valor: expresion.valor, tipo: TIPO_DATO.NUMERO };
-    } else if (expresion.tipo === TIPO_VALOR.IDENTIFICADOR) {
-        // Es un identificador.
-        // Obtenemos el valor de la tabla de simbolos
-        const sym = tablaDeSimbolos.obtener(expresion.valor);
-        return { valor: sym.valor, tipo: sym.tipo };
+    } else if (expresion.tipo === TIPO_VALOR.BOOLEAN) {
+        return { valor: expresion.valor, tipo: expresion.tipo };
     } else {
+
         throw 'ERROR: expresión numérica no válida: ' + expresion;
     }
 }
@@ -211,7 +204,13 @@ function procesarExpresionLogica(expresion, tablaDeSimbolos) {
     return procesarExpresionRelacional(expresion, tablaDeSimbolos);
 }
 
+function procesarAsignacion(instruccion, tablaDeSimbolos) {
+    tablaDeSimbolos.agregar(instruccion.identificador, instruccion.tipo_dato);
+    const valor = procesarExpresionCadena(instruccion.expresionNumerica, tablaDeSimbolos); //aqui quiero que retorne: tipo y valor
+    //console.log(valor.tipo + "tipo: " + typeof valor);
+    tablaDeSimbolos.actualizar(instruccion.identificador, valor);
+}
 
 function setConsola(texto) {
-    document.getElementById("txtConsola").value = texto;
+    document.getElementById("txtConsola").value = contenido + "\n";
 }

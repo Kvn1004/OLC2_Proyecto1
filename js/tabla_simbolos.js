@@ -18,16 +18,28 @@ const TS = class {
                     } else {
                         simbolo.valor = valor.valor;
                     }
-                } else {
+                } else if (simbolo.tipo === TIPO_DATO.STRING) {
                     if (valor.valor instanceof Number) { //para que no hayan clavos, convertimos si es necesario
                         simbolo.valor = valor.valor.toString();
                     } else {
                         simbolo.valor = valor.valor;
                     }
+                } else if (simbolo.tipo === TIPO_DATO.BOOLEAN) {
+                    simbolo.valor = valor.valor;
                 }
 
             } else {
-                throw 'ERROR DE TIPOS -> variable: ' + id + ' tiene tipo: ' + simbolo.tipo + ' y el valor a asignar es de tipo: ' + valor.tipo;
+                if (valor instanceof String) {
+                    simbolo.tipo = TIPO_DATO.STRING;
+                } else if (valor instanceof Number) {
+                    simbolo.tipo = TIPO_DATO.NUMERO;
+                } else if (valor instanceof Boolean) {
+                    simbolo.tipo = TIPO_DATO.BOOLEAN;
+                } else {
+                    simbolo.tipo = TIPO_DATO.VOID;
+                }
+                simbolo.valor = valor.valor;
+                //throw 'ERROR DE TIPOS -> variable: ' + id + ' tiene tipo: ' + simbolo.tipo + ' y el valor a asignar es de tipo: ' + valor.tipo;
             }
         } else {
             throw 'ERROR: variable: ' + id + ' no ha sido definida';
@@ -37,7 +49,9 @@ const TS = class {
     obtener(id) {
         const simbolo = this._simbolos.filter(simbolo => simbolo.id === id)[0];
 
-        if (simbolo) return simbolo; //aqui devolvemos el simbolo completo
+        if (simbolo) {
+            return simbolo;
+        } //aqui devolvemos el simbolo completo
         else throw 'ERROR: variable: ' + id + ' no ha sido definida';
     }
 
@@ -49,8 +63,10 @@ const TS = class {
 
 const TIPO_DATO = {
     NUMERO: 'NUMERO',
-    STRING: 'STRING'
-
+    STRING: 'STRING',
+    BOOLEAN: 'BOOLEAN',
+    VOID: 'VOID',
+    TYPE: 'TYPE'
 }
 
 function crearSimbolo(id, tipo, valor) {
